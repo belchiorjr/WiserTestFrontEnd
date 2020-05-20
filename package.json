@@ -1,0 +1,19 @@
+{
+  "name": "wisertestfrontend",
+  "version": "1.0.0",
+  "description": "Challenge Front End | Pokédex - Wiser Educação, utilizando React Hooks, Redux e Axios",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/belchiorjr/WiserTestFrontEnd.git"
+  },
+  "author": "Belchior Pereira de Araújo Júnior",
+  "license": "Freeware",
+  "bugs": {
+    "url": "https://github.com/belchiorjr/WiserTestFrontEnd/issues"
+  },
+  "homepage": "https://github.com/belchiorjr/WiserTestFrontEnd#readme"
+}
