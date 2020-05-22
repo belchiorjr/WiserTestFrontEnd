@@ -1,36 +1,42 @@
 import React, { Fragment } from 'react';
 import { useParams } from 'react-router-dom';
+import {Link} from 'react-router-dom'
 
 import {useDispatch, useSelector} from 'react-redux'
 import {listPokemonAction } from '../redux/pokedux';
 
+import Paginate from './Paginate';
+import Title from './Title';
 
 const ListPokemons = () => {
 
     const dispatch = useDispatch();
     var position = useParams('position');
     const pokemons = useSelector(store => store.pokemons.pokemons_state);
-    
 
+console.log(pokemons);
+
+    
     if (!position.position)
         position.position = 0;
 
-
     dispatch(listPokemonAction(position.position));
 
-    
     return (
         <Fragment>
-            <h1>Lista de Pokemons</h1>
-         
+            <Title value="Lista de Pokemons" />
             <ul>
                 {
                     pokemons.map(item => (
-                        <li key={item.name}>{item.name}</li>
+                        <li>
+                        <Link  key={item.id} to={`/detail/${item.id}`}>
+                            {item.name}
+                        </Link>
+                        </li>
                     ))
                 }
             </ul>
-
+            <Paginate />
         </Fragment>
     );
 }
