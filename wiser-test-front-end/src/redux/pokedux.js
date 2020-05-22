@@ -5,15 +5,23 @@ const dataState = {
     pokemons_state: [],
     positions_init_pages_state: [],
     position_state: null,
-    total_state:0
+    total_state:0,
+    search_state:"",
+    results_search_state: [],
+    error_message: ""
 }
 
+
+
 const LISTAR_POKEMONS = 'LISTAR_POKEMONS';
+const SEARCH = 'SEARCH';
 
 
 // Reducers
 export default function pokemonReducer(state = dataState, action) {
     switch (action.type) {
+
+        
         case LISTAR_POKEMONS:
             return {...state, 
                 pokemons_state: action.payload.pokemons, 
@@ -21,11 +29,45 @@ export default function pokemonReducer(state = dataState, action) {
                 total: action.payload.total,
                 positions_init_pages_state: action.payload.positions_inits_pages
             }    
-   
+
+        case SEARCH:
+            return {...state, 
+                search_state: action.payload.search, 
+                results_search_state: action.payload.data, 
+                error_message: action.payload.error_message, 
+            }       
         default:
             return state;
     }
 }
+
+
+// Busca um pokemon pelo nome
+export const searchPokemonAction = (search) => async (dispatch, getState) => {
+    const _search_state = getState().pokemons.search_state;
+
+    if (search !== _search_state) {
+        var payload_values = {
+            search: search,
+            data: [],
+            error_message: "Não foi possível encontrar o pokemon"
+        }
+
+        const urlSearch = `https://pokeapi.co/api/v2/pokemon/${search}`;
+        const res = await axios.get(urlSearch);
+
+        if (res.data) {
+            payload_values.data = [res.data];       
+            payload_values.error_message = "";
+        }
+
+        dispatch({
+            type: SEARCH,
+            payload: payload_values
+        });
+    }
+}
+
 
 
 // Buscar os pokemons por posição no web-service

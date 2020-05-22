@@ -6,7 +6,7 @@ import {
 } from "react-router-dom"
 
 import ListPokemons from './components/ListPokemons';
-import SearchPokemons from './components/SearchPokemons';
+import Search from './components/Search';
 import DetailPokemon from './components/DetailPokemon';
 
 
@@ -17,20 +17,17 @@ function App() {
 
   const store = generateStore();
 
-
-
   return (
     <Provider store={store}>
       <Router>
         <Switch>
           <Route path="/" exact>
+            <Search />
             <ListPokemons />
           </Route>
           <Route path="/:position" exact>
+            <Search />
             <ListPokemons  />
-          </Route>
-          <Route path="/search/:q" exact>
-            <SearchPokemons />
           </Route>
           <Route path="/detail/:id" exact>
             <DetailPokemon />
