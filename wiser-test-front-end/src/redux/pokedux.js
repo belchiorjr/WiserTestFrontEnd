@@ -8,20 +8,20 @@ const dataState = {
     total_state:0,
     search_state:"",
     results_search_state: [],
-    error_message: ""
+    error_message: "",
+    pokemon_detail_id_state: "",
+    pokemon_detail_state:[]
 }
-
-
 
 const LISTAR_POKEMONS = 'LISTAR_POKEMONS';
 const SEARCH = 'SEARCH';
+const DETAIL = 'DETAIL';
 
 
 // Reducers
 export default function pokemonReducer(state = dataState, action) {
     switch (action.type) {
 
-        
         case LISTAR_POKEMONS:
             return {...state, 
                 pokemons_state: action.payload.pokemons, 
@@ -36,10 +36,59 @@ export default function pokemonReducer(state = dataState, action) {
                 results_search_state: action.payload.data, 
                 error_message: action.payload.error_message, 
             }       
+
+        case DETAIL:
+            return {...state, 
+                pokemon_detail_id_state: action.payload.id,
+                pokemon_detail_state: action.payload.data, 
+                error_message: action.payload.error_message, 
+            }       
+        
         default:
             return state;
     }
 }
+
+
+
+
+// Detalha Dados do Pokemon
+export const detailAction = (id) => async (dispatch, getState) => {
+
+    const _pokemon_detail_id_state = getState().pokemons.pokemon_detail_id_state;
+
+    if (_pokemon_detail_id_state != id) {
+
+        var payload_values = {
+            data: [],
+            id: id,
+            error_message: "Não foi possível encontrar o pokemon"
+        }
+
+        const urlGet = `https://pokeapi.co/api/v2/pokemon/${id}`;
+        const r = await axios.get(urlGet);
+
+        if (r.data) {
+            // Detalhes do pokemon solicitado.
+            var pokemon = {
+                id: r.data.id,
+                name: r.data.name,
+                sprites: r.data.sprites,
+                abilities: r.data.abilities,
+                stats: r.data.stats
+            };
+
+            payload_values.data = [pokemon]; 
+            payload_values.error_message = "";
+        }
+
+        dispatch({
+            type: DETAIL,
+            payload: payload_values
+        });
+    }
+}
+
 
 
 // Busca um pokemon pelo nome

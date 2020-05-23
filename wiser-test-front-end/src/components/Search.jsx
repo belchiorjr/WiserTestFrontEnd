@@ -5,7 +5,6 @@ import {useDispatch, useSelector} from 'react-redux'
 import {searchPokemonAction } from '../redux/pokedux';
 
 
-
 const SearchForm = () => {
 
     const results_search_state = useSelector(store => store.pokemons.results_search_state);
@@ -25,10 +24,6 @@ const SearchForm = () => {
         event.preventDefault();
     }
 
-    console.log(results_search_state);
-
-
-   
     return (
         <Fragment>
             <form  onSubmit={searchPokemon}>

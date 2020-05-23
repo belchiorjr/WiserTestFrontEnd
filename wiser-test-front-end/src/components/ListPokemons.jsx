@@ -9,7 +9,6 @@ import Paginate from './Paginate';
 import Title from './Title';
 
 
-
 const ListPokemons = () => {
 
     const dispatch = useDispatch();
