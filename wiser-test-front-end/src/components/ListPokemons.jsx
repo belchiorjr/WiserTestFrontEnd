@@ -1,7 +1,4 @@
 import React, { Fragment } from 'react';
-import { useParams } from 'react-router-dom';
-
-
 import {useDispatch, useSelector} from 'react-redux'
 import {listPokemonAction } from '../redux/pokedux';
 

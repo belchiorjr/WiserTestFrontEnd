@@ -58,7 +58,7 @@ export const detailAction = (id) => async (dispatch, getState) => {
 
     const _pokemon_detail_id_state = getState().pokemons.pokemon_detail_id_state;
 
-    if (_pokemon_detail_id_state != id) {
+    if (_pokemon_detail_id_state !== id) {
 
         var payload_values = {
             data: [],
@@ -68,6 +68,7 @@ export const detailAction = (id) => async (dispatch, getState) => {
 
         const urlGet = `https://pokeapi.co/api/v2/pokemon/${id}`;
         const r = await axios.get(urlGet);
+
 
         if (r.data) {
 
@@ -180,9 +181,9 @@ export const listPokemonAction = (position) => async(dispatch, getState) => {
 
                 res.data.results.map( async(item) => {
                   
-                    var r = {};
+                    var r = await axios.get(item.url)
 
-                    if (r = await axios.get(item.url)) {
+                    if (r) {
                         const pokemon = {
                             id: r.data.id,
                             

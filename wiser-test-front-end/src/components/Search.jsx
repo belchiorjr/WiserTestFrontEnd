@@ -34,7 +34,7 @@ const SearchForm = () => {
                 <form  onSubmit={searchPokemon} className="flex inline-block">
                     <div className="w-1/12 ">
                         <button type="submit" className="outline-none active:outline-none focus:outline-none backgroud:transparent">
-                            <img src="./img/search.svg" />
+                            <img src="./img/search.svg" alt="Buscar" />
                         </button>
                     </div>
                     <div className="w-11/12 -mt-1">
