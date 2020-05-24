@@ -8,5 +8,5 @@ Baixe o projeto.<br>
 Acesse pelo terminal a pasta do projeto e em seguida a pasta da aplicação <b>wiser-test-front-end</b>.
 </p>
 <p>
-Após acessar digite o comando <b>npm install</b> e em seguida o <b>npm start</b>
+Após acessar digite o comando <b>npm install</b> e em seguida o <b>npm start.</b>
 </p>
