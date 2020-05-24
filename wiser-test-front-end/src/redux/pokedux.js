@@ -27,7 +27,8 @@ export default function pokemonReducer(state = dataState, action) {
                 pokemons_state: action.payload.pokemons, 
                 actual_position: action.payload.position, 
                 total: action.payload.total,
-                positions_init_pages_state: action.payload.positions_inits_pages
+                positions_init_pages_state: action.payload.positions_inits_pages,
+                position_state: action.payload.position
             }    
 
         case SEARCH:
@@ -69,13 +70,17 @@ export const detailAction = (id) => async (dispatch, getState) => {
         const r = await axios.get(urlGet);
 
         if (r.data) {
+
             // Detalhes do pokemon solicitado.
             var pokemon = {
                 id: r.data.id,
                 name: r.data.name,
                 sprites: r.data.sprites,
+                image_large: `https://pokeres.bastionbot.org/images/pokemon/${r.data.id}.png`,
                 abilities: r.data.abilities,
-                stats: r.data.stats
+                stats: r.data.stats,
+                primary_type: r.data.types[0].type.name,
+                types: r.data.types
             };
 
             payload_values.data = [pokemon]; 
@@ -96,26 +101,30 @@ export const searchPokemonAction = (search) => async (dispatch, getState) => {
     const _search_state = getState().pokemons.search_state;
 
     if (search !== _search_state) {
-        var payload_values = {
-            search: search,
-            data: [],
-            error_message: "Não foi possível encontrar o pokemon"
-        }
-
+       
         const urlSearch = `https://pokeapi.co/api/v2/pokemon/${search}`;
-        const res = await axios.get(urlSearch);
+        const r = await axios.get(urlSearch);
 
-        if (res.data) {
-            payload_values.data = [res.data];       
-            payload_values.error_message = "";
+        if (r) {
+
+            const pokemon = {
+                id: r.data.id,
+                sprites: r.data.sprites,
+                name: r.data.name,
+                primary_type: r.data.types[0].type.name,
+                types: r.data.types
+            }
+
+            dispatch({
+                type: SEARCH,
+                payload: {
+                    data: [pokemon]
+                }
+            })
         }
-
-        dispatch({
-            type: SEARCH,
-            payload: payload_values
-        });
     }
 }
+
 
 
 
@@ -123,6 +132,8 @@ export const searchPokemonAction = (search) => async (dispatch, getState) => {
 export const listPokemonAction = (position) => async(dispatch, getState) => {
 
     try{
+        position = (!position) ? 0 : position;
+
         const _position = getState().pokemons.actual_position;
         
         if (_position !== position) {
@@ -167,23 +178,35 @@ export const listPokemonAction = (position) => async(dispatch, getState) => {
 
                 var pokemons_prepared = [];
 
-                res.data.results.map(item => {
-                    const pokemon = {
-                        'id' : item.url.replace(/^[\s\S]+pokemon\/|\//gm, ''),
-                        'name': item.name
+                res.data.results.map( async(item) => {
+                  
+                    var r = {};
+
+                    if (r = await axios.get(item.url)) {
+                        const pokemon = {
+                            id: r.data.id,
+                            
+                            sprites: r.data.sprites,
+                            name: r.data.name,
+                            primary_type: r.data.types[0].type.name,
+                            types: r.data.types
+                        }
+
+                        pokemons_prepared[r.data.id] = pokemon;
+
+                        setTimeout(() =>{
+                            dispatch({
+                                type: LISTAR_POKEMONS,
+                                payload: {
+                                    pokemons: pokemons_prepared,
+                                    position: position,
+                                    total:res.data.count,
+                                    positions_inits_pages: positions_inits_pages
+                                }
+                            })
+                        }, 500);
                     }
-                    return pokemons_prepared.push(pokemon);
                 });
-                
-                dispatch({
-                    type: LISTAR_POKEMONS,
-                    payload: {
-                        pokemons: pokemons_prepared,
-                        position: position,
-                        total:res.data.count,
-                        positions_inits_pages: positions_inits_pages
-                    }
-                })
             }
         }
     } catch(error) {

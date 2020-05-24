@@ -5,27 +5,27 @@ import {useDispatch, useSelector} from 'react-redux'
 import {detailAction } from '../redux/pokedux';
 
 
-const DetailPokemon = () => {
+const DetailPokemon = (props) => {
 
     const pokemon_detail_state = useSelector(store => store.pokemons.pokemon_detail_state);
-    const dispatch = useDispatch();
-    var id = useParams('id');
+    var position_state = useSelector(store => store.pokemons.position_state);
+    
+    position_state = (!position_state) ? 0 : position_state;
 
-    if(id.id) {
-        dispatch(detailAction(id.id));
+    const dispatch = useDispatch();
+    
+    if(props.name) {
+        dispatch(detailAction(props.name));
     }
     
-    console.log(pokemon_detail_state);
 
 
     return (
         <Fragment>
-            <h1>Detalhe do Pokemon</h1>
-          
-
+            
             <ul>
                 {
-                        pokemon_detail_state.map(pokemon => (
+                    pokemon_detail_state.map(pokemon => (
                         <li key={pokemon.id}>
                             Nome: {pokemon.name}
 
@@ -34,7 +34,7 @@ const DetailPokemon = () => {
                                 <ul>
                                     {  
                                         pokemon.abilities.map(abilitie => (
-                                                <li>
+                                                <li key={abilitie.ability.name} >
                                                     {abilitie.ability.name}
                                                 </li>
                                             )
@@ -49,7 +49,7 @@ const DetailPokemon = () => {
                                 <ul>
                                     {  
                                         pokemon.stats.map(stat => (
-                                                <li>
+                                                <li key={stat.stat.name}>
                                                     {stat.stat.name} - {stat.base_stat}
                                                 </li>
                                             )
@@ -62,6 +62,10 @@ const DetailPokemon = () => {
                     ))
                 }
             </ul>
+
+            <Link  to={`/` + position_state} >
+                Voltar
+            </Link>
         </Fragment>
     );
 }
